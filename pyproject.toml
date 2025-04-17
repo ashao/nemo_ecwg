@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nemoecwg"
+version = "0.0.1"
+dependencies = [
+  "xarray[io]",
+  "xgcm",
+  "gcm_filters",
+  "jinja2",
+  "numpy",
+  "matplotlib",
+  "jupyterlab"
+]
+
+[tool.setuptools.package-data]
+"nemoecwg.cases.unagi.inputs" = ["*"]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "isort"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+exclude = '''
+(
+  | \.egg
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | dist
+  | setup.py
+  | .*\.py
+)
+'''

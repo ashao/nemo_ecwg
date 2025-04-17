@@ -1,0 +1,111 @@
+!!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+!! NEMO/OCE :   Configuration namelist_cfg used to overwrite defaults value defined in namelist_ref
+!!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+!! NEMO/OCE  :  1 - Domain & run manager (namrun, namcfg, namdom, namzgr, namzgr_sco )
+!!              2 - diagnostics      (namnc4)
+!!              3 - miscellaneous    (nammpp, namctl)
+!!
+!! namelist skeleton : egrep -E '(^/ *$|^! *$|^ *$|&nam.*|!---.*|!! .*|!!==.*|!!>>>.*)' namelist_ref > namelist_skl
+!!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+!-----------------------------------------------------------------------
+&namrun        !   parameters of the run
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namdom        !   space and time domain (bathymetry, mesh, timestep)
+!-----------------------------------------------------------------------
+   ln_read_cfg = .false.
+   nn_bathy    =       1   ! = 0 compute analyticaly
+                           ! = 1 read the bathymetry file
+                           ! = 2 compute from external bathymetry
+                           ! = 3 compute from parent (if "key_agrif")
+   nn_interp   =       1   ! type of interpolation (nn_bathy =2)
+   ln_lin_int  = .true.    ! linear (T) or near neighb (F) interp (nn_bathy =3)
+   cn_domcfg   =  ''
+   cn_topo     =  '{{ cn_topo }}'        ! external topo file (nn_bathy =1)
+   cn_bath     =  'bathymetry'         ! topo name in file  (nn_bathy =1)
+   cn_lon      =  'nav_lon'            ! lon  name in file  (nn_bathy =1)
+   cn_lat      =  'nav_lat'            ! lat  name in file  (nn_bathy =1)
+   rn_scale    =       1
+   rn_bathy    =       0.              !  value of the bathymetry. if (=0) bottom flat at jpkm1
+   nn_msh      =       1               !  create (=1) a mesh file or not (=0)
+   jphgr_msh   =       3               !  type of horizontal mesh
+   ppglam0     = {{ lam0 }}            !  longitude of first row and column T-point (jphgr_msh = 1)
+   ppgphi0     = {{ phi0 }}            !  latitude  of first row and column T-point (jphgr_msh = 1)
+   ppe1_deg    =  999999.0             !  zonal      grid-spacing (degrees)
+   ppe2_deg    =  999999.0             !  meridional grid-spacing (degrees)
+   ppe1_m      =  {{ dx }}             !  zonal      grid-spacing (metres)
+   ppe2_m      =  {{ dy }}             !  meridional grid-spacing (metres)
+   ppsur       =  999999.0             !  ORCA r4, r2 and r05 coefficients
+   ppa0        =  999999.0             ! (default coefficients)
+   ppa1        =  999999.0             !
+   ppkth       =      18.0             !
+   ppacr       =      10.0             !
+   ppdzmin     =    10.0               !  Minimum vertical spacing
+   pphmax      =  {{ depth }}          !  Maximum depth
+   ldbletanh   =  .FALSE.              !  Use/do not use double tanf function for vertical coordinates
+   ppa2        =  999999.0             !  Double tanh function parameters
+   ppkth2      =  999999.0             !
+   ppacr2      =  999999.0             !
+/
+!-----------------------------------------------------------------------
+&namcfg        !   parameters of the configuration
+!-----------------------------------------------------------------------
+   !
+   ln_e3_dep   = .true.    ! =T : e3=dk[depth] in discret sens.
+   !                       !      ===>>> will become the only possibility in v4.0
+   !                       ! =F : e3 analytical derivative of depth function
+   !                       !      only there for backward compatibility test with v3.6
+      !                      ! if ln_e3_dep = T
+      ln_dept_mid = .false.  ! =T : set T points in the middle of cells
+   !                       !
+   cp_cfg      =  "UNAGI"   !  name of the configuration
+   jp_cfg      =      0   !  resolution of the configuration (GYRE and benchmark only)
+   jpidta      =    {{ ni }}   !  1st lateral dimension ( >= jpi )
+   jpjdta      =    {{ nj }}  !  2nd    "         "    ( >= jpj )
+   jpkdta      =    {{ nk }}   !  number of levels      ( >= jpk )
+   Ni0glo      =    {{ ni }}   !  1st dimension of global domain --> i =jpidta
+   Nj0glo      =    {{ nj }}   !  2nd    -                  -    --> j  =jpjdta
+   jpkglo      =    {{ nk }}
+   jperio      =       1   !  lateral cond. type (between 0 and 6)
+/
+!-----------------------------------------------------------------------
+&namzgr        !   vertical coordinate                                  (default: NO selection)
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+   ln_zco      = .false.   !  z-coordinate - full    steps
+   ln_zps      = .true.    !  z-coordinate - partial step
+   ln_sco      = .false.   !  s- or hybrid z-s-coordinate
+   ln_mes      = .false.   !  Multi-Envelope s-coordinate
+   ln_isfcav   = .false.   !  ice shelf cavity             (T: see namzgr_isf)
+/
+!-----------------------------------------------------------------------
+&namzgr_isf    !   isf cavity geometry definition
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namzgr_sco    !   s-coordinate or hybrid z-s-coordinate                (default F)
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namzgr_mes    !   MEs-coordinate
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namclo ! (closed sea : need ln_domclo = .true. in namcfg)
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namlbc        !   lateral momentum boundary condition                  (default: NO selection)
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namagrif      !  AGRIF zoom                                            ("key_agrif")
+!-----------------------------------------------------------------------
+/
+!-----------------------------------------------------------------------
+&namnc4        !   netcdf4 chunking and compression settings            ("key_netcdf4")
+!-----------------------------------------------------------------------
+/
+
+
